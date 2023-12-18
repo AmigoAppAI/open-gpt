@@ -1,5 +1,6 @@
 import {
   AZURE_DEPLOYMENT_ID_EMBEDDINGS,
+  AZURE_MODELS_PATH,
   OPENAI_API_HOST,
   OPENAI_API_TYPE,
   OPENAI_API_VERSION,
@@ -15,7 +16,7 @@ export const getOpenAIApi = (deploymentId?: string): OpenAI => {
     openaiConfig = {
       apiKey,
       baseURL: new URL(
-        OPENAI_API_HOST + '/openai/models/' + deploymentId,
+        OPENAI_API_HOST + '/openai/deployments/' + deploymentId,
       ).toString(),
       defaultQuery: { 'api-version': OPENAI_API_VERSION },
       defaultHeaders: { 'api-key': apiKey },

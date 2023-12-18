@@ -1,4 +1,6 @@
 import {
+  AZURE_DEPLOYMENT_ID,
+  AZURE_MODELS_PATH,
   OPENAI_API_HOST,
   OPENAI_API_TYPE,
   OPENAI_API_VERSION,
@@ -24,8 +26,7 @@ export const models = router({
 
       let url = `${OPENAI_API_HOST}/v1/models`;
       if (OPENAI_API_TYPE === 'azure') {
-        url = `${OPENAI_API_HOST}/openai/models?api-version=${OPENAI_API_VERSION}`;
-        url = `${OPENAI_API_HOST}/openai/models?api-version=${OPENAI_API_VERSION}`;
+        url = `${OPENAI_API_HOST}/openai/${AZURE_MODELS_PATH}?api-version=${OPENAI_API_VERSION}`;
       }
 
       const response = await fetch(url, {
@@ -60,14 +61,14 @@ export const models = router({
 
       const json = await response.json();
 
-      const models: OpenAIModel[] = json.data
+      let models: OpenAIModel[] = json.data
         .map((model: any) => {
+          const model_name =
+            OPENAI_API_TYPE === 'azure' ? model.model || model.id : model.id;
           for (const [key, value] of Object.entries(OpenAIModelID)) {
-            const modelId = model.id;
-
-            if (value === modelId) {
+            if (value === model_name) {
               const r: OpenAIModel = {
-                id: modelId,
+                id: model.id,
                 azureDeploymentId:
                   OPENAI_API_TYPE === 'azure' ? model.id : undefined,
                 name: OpenAIModels[value].name,
@@ -81,13 +82,18 @@ export const models = router({
           }
         })
         .filter(Boolean);
-      if (OPENAI_API_TYPE === 'azure') {
-        return models.filter(
-          (modelId) =>
-            modelId.azureDeploymentId === process.env.AZURE_DEPLOYMENT_ID,
-        );
-      }
 
+      if (OPENAI_API_TYPE === 'azure' && AZURE_DEPLOYMENT_ID) {
+        // Attempt to only show 1 specific model for the user to select when using Azure. If AZURE_DEPLOYMENT_ID has no value then show all models.
+        const filteredModels = models.filter(
+          (model) => model.id === AZURE_DEPLOYMENT_ID,
+        );
+        if (filteredModels.length > 0) {
+          // Only provide 1 model
+
+          models = filteredModels;
+        }
+      }
       return models;
     }),
 });

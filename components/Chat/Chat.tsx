@@ -216,10 +216,12 @@ export const Chat = memo(() => {
             </div>
             <div className="text-center text-gray-500 dark:text-gray-400">
               <div className="mb-2">
-                OpenGPT allows you to safely use your OpenAI API Key and pay as you go.
+                OpenGPT allows you to safely use your OpenAI API Key and pay as
+                you go.
               </div>
               <div className="mb-2">
-                It is <span className="italic">only</span> used to communicate with their API.
+                It is <span className="italic">only</span> used to communicate
+                with their API.
               </div>
               <div className="mb-2">
                 {t(
@@ -259,7 +261,7 @@ export const Chat = memo(() => {
                           <Spinner size="16px" className="mx-auto" />
                         </div>
                       ) : (
-                        'Chatbot UI'
+                        'OpenGPT'
                       )}
                     </div>
 

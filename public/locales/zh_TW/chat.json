@@ -25,7 +25,7 @@
   "click if using a .env.local file": "若使用 .env.local 檔案，請點選",
   "Message limit is {{maxLength}} characters. You have entered {{valueLength}} characters.": "訊息字數限制為 {{maxLength}} 字元，您已輸入 {{valueLength}} 字元。",
   "Please enter a message": "請輸入訊息",
-  "Chatbot UI is an advanced chatbot kit for OpenAI's chat models aiming to mimic ChatGPT's interface and functionality.": "Chatbot UI 是一個設計來模擬 OpenAI 聊天模型 ChatGPT 的介面和功能進階的聊天機器人。",
+  "Open GPT is an advanced chatbot kit for OpenAI's chat models aiming to mimic ChatGPT's interface and functionality.": "Open GPT 是一個設計來模擬 OpenAI 聊天模型 ChatGPT 的介面和功能進階的聊天機器人。",
   "Are you sure you want to clear all messages?": "您確定要清除所有訊息嗎？",
   "Higher values like 0.8 will make the output more random, while lower values like 0.2 will make it more focused and deterministic.": "較高的數值，如 0.8，將使輸出更為隨機，而較低的數值，如 0.2，則會使輸出更集中且具確定性。",
   "View Account Usage": "檢視帳戶使用情況",

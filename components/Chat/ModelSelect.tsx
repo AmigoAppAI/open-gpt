@@ -5,6 +5,8 @@ import { useTranslation } from 'next-i18next';
 
 import useConversations from '@/hooks/useConversations';
 
+import { OPENAI_API_TYPE } from '@/utils/app/const';
+
 import { OpenAIModel, OpenAIModelType } from '@/types/openai';
 
 import HomeContext from '@/pages/api/home/home.context';
@@ -27,6 +29,22 @@ export const ModelSelect = () => {
       });
   };
 
+  // If a Model Name isn't available, then use the Model ID instead.
+  const getModelText = (model: OpenAIModel) => {
+    if (
+      OPENAI_API_TYPE === 'azure' &&
+      model.name &&
+      model.id &&
+      model.name.toLowerCase() != model.id.toLowerCase()
+    ) {
+      // If using Azure, and the model name and ID aren't the same, then add the model ID to help distinguish the differences between the models.
+      // This can help when there are multiple models with the same name.
+      return model.name + ' [' + model.id + ']';
+    } else {
+      return model.name || model.id;
+    }
+  };
+
   return (
     <div className="flex flex-col">
       <label className="mb-2 text-left text-neutral-700 dark:text-neutral-400">
@@ -39,30 +57,33 @@ export const ModelSelect = () => {
           value={selectedConversation?.model?.id || defaultModelId}
           onChange={handleChange}
         >
-          {models.filter(m => m.type === OpenAIModelType.CHAT).map((model) => (
-            <option
-              key={model.id}
-              value={model.id}
-              className="dark:bg-[#343541] dark:text-white"
-            >
-              {model.id === defaultModelId
-                ? `Default (${model.name})`
-                : model.name}
-            </option>
-          ))}
+          {models
+            .filter((m) => m.type === OpenAIModelType.CHAT)
+            .map((model) => (
+              <option
+                key={model.id}
+                value={model.id}
+                className="dark:bg-[#343541] dark:text-white"
+              >
+                {model.id === defaultModelId
+                  ? `Default (${getModelText(model)})`
+                  : getModelText(model)}
+              </option>
+            ))}
         </select>
       </div>
-      {!isAzureOpenAI && <div className="w-full mt-3 text-left text-neutral-700 dark:text-neutral-400 flex items-center">
-        <a
-          href="https://platform.openai.com/account/usage"
-          target="_blank"
-          className="flex items-center"
-        >
-          <IconExternalLink size={18} className={'inline mr-1'} />
-          {t('View Account Usage')}
-        </a>
-      </div>
-      }
+      {!isAzureOpenAI && (
+        <div className="w-full mt-3 text-left text-neutral-700 dark:text-neutral-400 flex items-center">
+          <a
+            href="https://platform.openai.com/account/usage"
+            target="_blank"
+            className="flex items-center"
+          >
+            <IconExternalLink size={18} className={'inline mr-1'} />
+            {t('View Account Usage')}
+          </a>
+        </div>
+      )}
     </div>
   );
 };
